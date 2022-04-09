@@ -1,11 +1,61 @@
 version: "3.7" 
 services:
 
-  php:
+  zookeeper:
+    image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
+    command: [
+      "sh", "-c",
+      "bin/zookeeper-server-start.sh config/zookeeper.properties"
+    ]
+    ports:
+      - "2181:2181"
+    environment:
+      LOG_DIR: /tmp/logs
+    networks:
+      - sge-network
+
+  gsl-mensageria-kafka:
+    image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
+    command: [
+      "sh", "-c",
+      "bin/kafka-server-start.sh config/server.properties --override listeners=$${KAFKA_LISTENERS} --override advertised.listeners=$${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=$${KAFKA_ZOOKEEPER_CONNECT}"
+    ]
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      LOG_DIR: "/tmp/logs"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks:
+      - sge-network
+
+
+
+  gsl-api-gateway-parceiros-quarkus:
+    image: gsl/gsl-api-gateway-parceiros-quarkus:1.0-${QUARKUS_MODE:-jvm}
+    build:
+      context: gsl-api-gateway-parceiros/producer
+      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
+    depends_on:
+      - gsl-mensageria-kafka
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: gsl-mensageria-kafka:9092
+      quarkus.rest-client."org.acme.kafka.services.SgeEntregasService".url: http://gse-entregas-service-php:9000/
+    ports:
+      - "8080:8080"
+    networks:
+      - sge-network
+
+
+
+  gse-entregas-service-php:
     build:
       context: sge-entregas
     image: sge-entregas/ge-entregas-service-php
-    container_name: sge-entregas-service
+    #container_name: sge-entregas-service
     ports:
       - "9000:9000"
     volumes:
@@ -13,18 +63,18 @@ services:
     command: composer install
     command: php -S 0.0.0.0:9000 -t public/api/
     environment:
-      DB_HOST: mysql
+      DB_HOST: sge-entregas-db
       DB_PORT: 3306
       DB_DATABASE: sge_entregas_db
       DB_USERNAME: root
       DB_PASSWORD: 12345
 
     links:
-      - mysql
+      - sge-entregas-db
     networks:
       - sge-network
 
-  mysql:
+  sge-entregas-db:
     image: mysql:5.7
     container_name: sge-entregas-db
     ports:
