@@ -1,0 +1,59 @@
+gateway-parceiros-quarkus_1
+gse-entregas-service-php_1           | [Sat Apr  9 18:16:01 2022] PHP 7.4.28 Development Server (http://0.0.0.0:9000) started
+gse-entregas-integracao-php_1        | group_id = kafka-quickstart-producer, metadata_broker_list = gsl-mensageria-kafka, bootstrap_servers = gsl-mensageria-kafka:9092, auto_offset_reset = earliest, topic = relatorio-entrega-recebido, consume_timeout = 120000Waiting for partition assignment... (make take some time when
+gse-entregas-integracao-php_1        | quickly re-joining the group after leaving it.)
+gse-entregas-integracao-php_1        | %3|1649528161.530|FAIL|rdkafka#consumer-1| [thrd:gsl-mensageria-kafka:9092/bootstrap]: gsl-mensageria-kafka:9092/bootstrap: Connect to ipv4#172.23.0.4:9092 failed: Connection refused (after 0ms in state CONNECT)
+gse-entregas-integracao-php_1        | %3|1649528161.530|ERROR|rdkafka#consumer-1| [thrd:gsl-mensageria-kafka:9092/bootstrap]: 1/1 brokers are down
+gse-entregas-integracao-php_1        | %3|1649528161.530|ERROR|rdkafka#consumer-1| [thrd:app]: rdkafka#consumer-1: gsl-mensageria-kafka:9092/bootstrap: Connect to ipv4#172.23.0.4:9092 failed: Connection refused (after 0ms in state CONNECT)
+gse-entregas-integracao-php_1        | %3|1649528162.528|FAIL|rdkafka#consumer-1| [thrd:gsl-mensageria-kafka:9092/bootstrap]: gsl-mensageria-kafka:9092/bootstrap: Connect to ipv4#172.23.0.4:9092 failed: Connection refused (after 0ms in state CONNECT, 1 identical error(s) suppressed)
+gse-entregas-integracao-php_1        | %3|1649528162.528|ERROR|rdkafka#consumer-1| [thrd:app]: rdkafka#consumer-1: gsl-mensageria-kafka:9092/bootstrap: Connect to ipv4#172.23.0.4:9092 failed: Connection refused (after 0ms in state CONNECT, 1 identical error(s) suppressed)
+gsl-api-gateway-parceiros-quarkus_1  | 2022-04-09 18:16:02,771 INFO  [io.sma.rea.mes.kafka] (main) SRMSG18258: Kafka producer kafka-producer-relatorio-entrega-recebido, connected to Kafka brokers 'gsl-mensageria-kafka:9092', is configured to write records to 'relatorio-entrega-recebido'
+gsl-api-gateway-parceiros-quarkus_1  | 2022-04-09 18:16:02,772 WARN  [org.apa.kaf.cli.NetworkClient] (kafka-producer-network-thread | kafka-producer-relatorio-entrega-recebido) [Producer clientId=kafka-producer-relatorio-entrega-recebido] Connection to node -1 (gsl-mensageria-kafka/172.23.0.4:9092) could not be established. Broker may not be available.
+gsl-api-gateway-parceiros-quarkus_1  | 2022-04-09 18:16:02,773 WARN  [org.apa.kaf.cli.NetworkClient] (kafka-producer-network-thread | kafka-producer-relatorio-entrega-recebido) [Producer clientId=kafka-producer-relatorio-entrega-recebido] Bootstrap broker gsl-mensageria-kafka:9092 (id: -1 rack: null) disconnected
+gsl-api-gateway-parceiros-quarkus_1  | 2022-04-09 18:16:02,874 WARN  [org.apa.kaf.cli.NetworkClient] (kafka-producer-network-thread | kafka-producer-relatorio-entrega-recebido) [Producer clientId=kafka-producer-relatorio-entrega-recebido] Connection to node -1 (gsl-mensageria-kafka/172.23.0.4:9092) could not be established. Broker may not be available.
+gsl-api-gateway-parceiros-quarkus_1  | 2022-04-09 18:16:02,874 WARN  [org.apa.kaf.cli.NetworkClient] (kafka-producer-network-thread | kafka-producer-relatorio-entrega-recebido) [Producer clientId=kafka-producer-relatorio-entrega-recebido] Bootstrap broker gsl-mensageria-kafka:9092 (id: -1 rack: null) disconnected
+gsl-mensageria-kafka_1               | [2022-04-09 18:16:02,885] INFO [Log partition=relatorio-entrega-recebido-0, dir=/tmp/kafka-logs] Loading producer state till offset 1331 with message format version 2 (kafka.log.Log)
+gsl-mensageria-kafka_1               | [2022-04-09 18:16:02,886] INFO [ProducerStateManager partition=relatorio-entrega-recebido-0] Loading producer state from snapshot file 'SnapshotFile(/tmp/kafka-logs/relatorio-entrega-recebido-0/00000000000000001331.snapshot,1331)' (kafka.log.ProducerStateManager)
+gsl-mensageria-kafka_1               | [2022-04-09 18:16:02,892] INFO Completed load of Log(dir=/tmp/kafka-logs/relatorio-entrega-recebido-0, topic=relatorio-entrega-recebido, partition=0, highWatermark=0, lastStableOffset=0, logStartOffset=0, logEndOffset=1331) with 1 segments in 19ms (29/52 loaded in /tmp/kafka-logs) (kafka.log.LogManager)
+gsl-api-gateway-parceiros-quarkus_1  | 2022-04-09 18:16:02,975 WARN  [org.apa.kaf.cli.NetworkClient] (kafka-producer-network-thread | kafka-producer-relatorio-entrega-recebido) [Producer clientId=kafka-producer-relatorio-entrega-recebido] Connection to node -1 (gsl-mensageria-kafka/172.23.0.4:9092) could not be established. Broker may not be available.
+gsl-api-gateway-parceiros-quarkus_1  | 2022-04-09 18:16:02,976 WARN  [org.apa.kaf.cli.NetworkClient] (kafka-producer-network-thread | kafka-producer-relatorio-entrega-recebido) [Producer clientId=kafka-producer-relatorio-entrega-recebido] Bootstrap broker gsl-mensageria-kafka:9092 (id: -1 rack: null) disconnected
+gsl-api-gateway-parceiros-quarkus_1  | 2022-04-09 18:16:03,177 WARN  [org.apa.kaf.cli.NetworkClient] (kafka-producer-network-thread | kafka-producer-relatorio-entrega-recebido) [Producer clientId=kafka-producer-relatorio-entrega-recebido] Connection to node -1 (gsl-mensageria-kafka/172.23.0.4:9092) could not be established. Broker may not be available.
+gsl-api-gateway-parceiros-quarkus_1  | 2022-04-09 18:16:03,177 WARN  [org.apa.kaf.cli.NetworkClient] (kafka-producer-network-thread | kafka-producer-relatorio-entrega-recebido) [Producer clientId=kafka-producer-relatorio-entrega-recebido] Bootstrap broker gsl-mensageria-kafka:9092 (id: -1 rack: null) disconnected
+gsl-mensageria-kafka_1               | [2022-04-09 18:16:03,649] INFO [ReplicaFetcherManager on broker 0] Removed fetcher for partitions Set(__consumer_offsets-22, __consumer_offsets-30, __consumer_offsets-8, __consumer_offsets-21, __consumer_offsets-4, __consumer_offsets-27, __consumer_offsets-7, __consumer_offsets-9, __consumer_offsets-46, __consumer_offsets-25, __consumer_offsets-35, __consumer_offsets-41, __consumer_offsets-33, __consumer_offsets-23, __consumer_offsets-49, __consumer_offsets-47, __consumer_offsets-16, __consumer_offsets-28, __consumer_offsets-31, __consumer_offsets-36, relatorio-entrega-recebido-0, __consumer_offsets-42, __consumer_offsets-3, __consumer_offsets-18, __consumer_offsets-37, __consumer_offsets-15, __consumer_offsets-24, quotes-0, __consumer_offsets-38, __consumer_offsets-17, __consumer_offsets-48, __consumer_offsets-19, __consumer_offsets-11, __consumer_offsets-13, __consumer_offsets-2, __consumer_offsets-43, __consumer_offsets-6, __consumer_offsets-14, __consumer_offsets-20, __consumer_offsets-0, __consumer_offsets-44, __consumer_offsets-39, __consumer_offsets-12, __consumer_offsets-45, __consumer_offsets-1, __consumer_offsets-5, __consumer_offsets-26, __consumer_offsets-29, __consumer_offsets-34, __consumer_offsets-10, __consumer_offsets-32, __consumer_offsets-40) (kafka.server.ReplicaFetcherManager)
+gsl-mensageria-kafka_1               | [2022-04-09 18:16:03,683] INFO [Partition relatorio-entrega-recebido-0 broker=0] Log loaded for partition relatorio-entrega-recebido-0 with initial high watermark 1331 (kafka.cluster.Partition)
+gse-entregas-integracao-php_1        | Assign: array(1) {
+gse-entregas-integracao-php_1        |   [0]=>
+gse-entregas-integracao-php_1        |   object(RdKafka\TopicPartition)#4 (4) {
+gse-entregas-integracao-php_1        |     ["topic"]=>
+gse-entregas-integracao-php_1        |     string(26) "relatorio-entrega-recebido"
+gse-entregas-integracao-php_1        |     ["partition"]=>
+gse-entregas-integracao-php_1        |     int(0)
+gse-entregas-integracao-php_1        |     ["offset"]=>
+gse-entregas-integracao-php_1        |     int(-1001)
+gse-entregas-integracao-php_1        |     ["err"]=>
+gse-entregas-integracao-php_1        |     int(0)
+gse-entregas-integracao-php_1        |   }
+gse-entregas-integracao-php_1        | }
+gse-entregas-integracao-php_1        | object(RdKafka\Message)#4 (10) {
+gse-entregas-integracao-php_1        |   ["err"]=>
+gse-entregas-integracao-php_1        |   int(0)
+gse-entregas-integracao-php_1        |   ["topic_name"]=>
+gse-entregas-integracao-php_1        |   string(26) "relatorio-entrega-recebido"
+gse-entregas-integracao-php_1        |   ["timestamp"]=>
+gse-entregas-integracao-php_1        |   int(1649528033735)
+gse-entregas-integracao-php_1        |   ["partition"]=>
+gse-entregas-integracao-php_1        |   int(0)
+gse-entregas-integracao-php_1        |   ["payload"]=>
+gse-entregas-integracao-php_1        |   string(233) "{"id":0,"uuid":"d0826e73-e7ad-4586-944a-0c75a4603bc5","id_entrega":1,"status":"PROGRAMADA","latitude":0.0,"longitude":0.0,"descricao":"field descricao at Sat Apr 09 2022 15:13:53 GMT-0300 (Horário Padrão de Brasília)","data":null}"
+gse-entregas-integracao-php_1        |   ["len"]=>
+gse-entregas-integracao-php_1        |   int(233)
+gse-entregas-integracao-php_1        |   ["key"]=>
+gse-entregas-integracao-php_1        |   NULL
+gse-entregas-integracao-php_1        |   ["offset"]=>
+gse-entregas-integracao-php_1        |   int(1325)
+gse-entregas-integracao-php_1        |   ["headers"]=>
+gse-entregas-integracao-php_1        |   array(0) {
+gse-entregas-integracao-php_1        |   }
+gse-entregas-integracao-php_1        |   ["opaque"]=>
+gse-entregas-integracao-php_1        |   NULL
+gse-entregas-integracao-php_1        | }

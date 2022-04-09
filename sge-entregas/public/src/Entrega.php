@@ -48,6 +48,20 @@ id, cte, valor, destinatario, endereco, endereco_latitude, endereco_longitude, d
     ";
   }
 
+  private function parseStatus($status) {
+    if(is_numeric($status))
+      return $status;
+
+    if($status === "PENDENTE") return 1;
+    if($status === "PROGRAMADA") return 2;
+    if($status === "EM_TRANSIDO") return 3;
+    if($status === "REALIZADA") return 4;
+    if($status === "CANCELADA") return 5;
+    
+    return 0;
+
+  }
+
   protected function hookMountCreateItemFieldsMapValues($input) {
     return array(
       'cte' => $input['cte'], 
@@ -57,7 +71,7 @@ id, cte, valor, destinatario, endereco, endereco_latitude, endereco_longitude, d
       'endereco_latitude' => $input['endereco_latitude'], 
       'endereco_longitude' => $input['endereco_longitude'], 
       'descricao' => $input['descricao'], 
-      'status' => $input['status'], 
+      'status' => $this->parseStatus($input['status']), 
       'observacoes' => $input['observacoes'], 
       'data_limite_entrega' => $this->datetimeFromStr($input['data_limite_entrega']), 
       'data_realizacao_entrega' => $this->datetimeFromStr($input['data_realizacao_entrega'])
@@ -96,7 +110,7 @@ id, cte, valor, destinatario, endereco, endereco_latitude, endereco_longitude, d
         'endereco_latitude' => $input['endereco_latitude'],
         'endereco_longitude' => $input['endereco_longitude'],
         'descricao' => $input['descricao'],
-        'status' => $input['status'],
+        'status' => $this->parseStatus($input['status']),
         'observacoes' => $input['observacoes'],
         'data_limite_entrega' => $this->datetimeFromStr($input['data_limite_entrega']),
         'data_realizacao_entrega' => $this->datetimeFromStr($input['data_realizacao_entrega'])

@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-@Path("/entregas")
+@Path("/entrega")
 public class RelatorioEntregaResource {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

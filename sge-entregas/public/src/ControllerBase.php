@@ -6,6 +6,7 @@ class ControllerBase {
   private $requestMethod;
   private $postId;
   private $ownerId;
+  private $inputJson;
 
   public function __construct($db, $requestMethod, $postId, $ownerId)
   {
@@ -13,6 +14,11 @@ class ControllerBase {
     $this->requestMethod = $requestMethod;
     $this->postId = $postId;
     $this->ownerId = $ownerId;
+    $this->inputJson = "";
+  }
+
+  public function setInputJson($inputJson) {
+    $this->inputJson = $inputJson;
   }
 
   public function processRequest()
@@ -173,7 +179,17 @@ class ControllerBase {
 
   private function createItem()
   {
-    $input = (array) json_decode(file_get_contents('php://input'), TRUE);
+    if($this->inputJson !== "") {
+      return $this->createItemFromStr($this->inputJson);
+    }
+
+    $this->createItemFromStr(file_get_contents('php://input'));
+  }
+
+
+  private function createItemFromStr($inputStr)
+  {
+    $input = (array) json_decode($inputStr, TRUE);
     if (! $this->validateRegister($input)) {
       return $this->unprocessableEntityResponse();
     }
@@ -189,8 +205,8 @@ class ControllerBase {
       $debug .= " - param: [" . implode(" | ", $param) . "]\n\n";
 
       if(!$statement->execute($param )) {
-        throw new \Error('Erro executando insert: ' . implode(", ",
-          $statement->errorInfo()));
+        throw new \Error('Erro executando comando de insert no banco: ' . implode(", ",
+          $statement->errorInfo()). " - $debug - INPUT: $input");
       }
 
       //$debug .= "execute() statement => " . $statement; 
@@ -207,7 +223,6 @@ class ControllerBase {
   ));
     return $response;
   }
-
   
    
   private function updateItem($id)

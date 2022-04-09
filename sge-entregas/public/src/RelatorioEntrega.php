@@ -46,11 +46,26 @@ CREATE TABLE IF NOT EXISTS `relatorio_entrega` (
     ";
   }
 
+  private function parseStatus($status) {
+    if(is_numeric($status))
+      return $status;
+
+    if($status === "PENDENTE") return 1;
+    if($status === "PROGRAMADA") return 2;
+    if($status === "EM_TRANSIDO") return 3;
+    if($status === "REALIZADA") return 4;
+    if($status === "CANCELADA") return 5;
+    
+    return 0;
+
+  }
+
   protected function hookMountCreateItemFieldsMapValues($input) {
+    
     return array(
         'uuid' => $input['uuid'],
         'id_entrega'  => $input['id_entrega'],
-        'status' => $input['status'],
+        'status' => $this->parseStatus($input['status']),
         'descricao' => $input['descricao'],
         'latitude' => $input['latitude'],
         'longitude' => $input['longitude'],
@@ -77,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `relatorio_entrega` (
   protected function hookMountUpdateItemFieldsMapValues($id, $input) {
     return array(
         'id' => (int) $id,
-        'status' => $input['status'],
+        'status' => $this->parseStatus($input['status']),
         'latitude'  => $input['latitude'],
         'longitude' => $input['longitude'],
         'descricao' => $input['descricao'],

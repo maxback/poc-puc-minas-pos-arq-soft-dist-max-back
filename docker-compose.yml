@@ -26,7 +26,7 @@ services:
       - "9092:9092"
     environment:
       LOG_DIR: "/tmp/logs"
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://gsl-mensageria-kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     networks:
@@ -51,6 +51,23 @@ services:
 
 
 
+  #gsl-api-gateway-monitor-quarkus:
+  #  image: gsl/gsl-api-gateway-monitor-quarkus:1.0-${QUARKUS_MODE:-jvm}
+  #  build:
+  #    context: gsl-api-gateway-parceiros/processor
+  #    dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
+  #  depends_on:
+  #    - gsl-mensageria-kafka
+  #  environment:
+  #    KAFKA_BOOTSTRAP_SERVERS: gsl-mensageria-kafka:9092
+  #  ports:
+  #    - "8088:8080"      
+  #  networks:
+  #    - sge-network
+
+
+
+
   gse-entregas-service-php:
     build:
       context: sge-entregas
@@ -60,8 +77,11 @@ services:
       - "9000:9000"
     volumes:
       - "./sge-entregas/:/var/www/html/"
-    command: composer install
-    command: php -S 0.0.0.0:9000 -t public/api/
+    #php /var/www/html/public/mensageria/consumer.php  
+    command: [
+      "sh", "-c",
+      "php -S 0.0.0.0:9000 -t public/api/"
+    ]
     environment:
       DB_HOST: sge-entregas-db
       DB_PORT: 3306
@@ -73,6 +93,66 @@ services:
       - sge-entregas-db
     networks:
       - sge-network
+
+
+  sge-entregas-integracao-sgl-php:
+    build:
+      context: sge-entregas-integracao-sgl
+    image: sge-entregas/ge-entregas-integracao-sgl-php
+    ports:
+      - "9001:9000"
+    volumes:
+      - "./sge-entregas-integracao-sgl/:/var/www/html/"
+    
+    #command: [
+    #  "sh", "-c",
+    #  "php /var/www/html/public/mensageria/consumerToEndPoint.php"
+    #]
+    environment:
+      services.SgeEntregasService.url: http://gse-entregas-service-php:9000/
+    networks:
+      - sge-network
+
+
+
+  #gse-entregas-integracao-php:
+  #  build:
+  #    context: sge-entregas
+  #  #image: sge-entregas/ge-entregas-service-php
+  #  image: sge-entregas/ge-entregas-integracao-php
+  #  #container_name: sge-entregas-integeracao
+  #  ports:
+  #    - "9001:9000"
+  #  volumes:
+  #    - "./sge-entregas/:/var/www/html/"
+  #  
+  #  command: [
+  #    "sh", "-c",
+  #    #"php /var/www/html/public/mensageria/consumer3.php"
+  #    "php /var/www/html/public/mensageria/consumerToEndPoint.php"
+  #  ]
+  #  environment:
+  #    DB_HOST: sge-entregas-db
+  #    DB_PORT: 3306
+  #    DB_DATABASE: sge_entregas_db
+  #    DB_USERNAME: root
+  #    DB_PASSWORD: 12345
+#
+  #    kafka.group.id: kafka-quickstart-producer'
+  #    kafka.metadata.broker.list: 'gsl-mensageria-kafka'
+  #    kafka.bootstrap.servers: 'gsl-mensageria-kafka:9092'
+  #    kafka.auto.offset.reset: 'earliest'
+  #    kafka.topic: 'relatorio-entrega-recebido'
+  #    kafka.consume.timeout: 180000      
+#
+  #    services.SgeEntregasService.url: http://gse-entregas-service-php:9000/
+#
+  #  links:
+  #    - sge-entregas-db
+  #  networks:
+  #    - sge-network
+
+
 
   sge-entregas-db:
     image: mysql:5.7
