@@ -30,6 +30,9 @@ public class RelatorioEntregaResource {
     @Channel("relatorio-entrega-recebido")
     Emitter<RelatorioEntrega> relatorioEntregaEmitter;
 
+    @Channel("relatorio-entrega-recebido-notificacao")
+    Emitter<RelatorioEntrega> relatorioEntregaNotificacaoRecebimentoEmitter;
+
     @Inject
     @RestClient
     SgeEntregasService sgeEntregasService;
@@ -56,10 +59,16 @@ public class RelatorioEntregaResource {
 
         relatorioEntrega.uuid = uuidRelatorio.toString();
 
-        logger.info("Enviando solicitação via mensageria para o serviço sge-entrega", relatorioEntrega);
+        logger.info("Enviando solicitação via mensageria para o serviço sge-entregas");
         logger.info("[{}]", relatorioEntrega);
 
         relatorioEntregaEmitter.send(relatorioEntrega);
+
+        
+        logger.info("Enviando solicitação via mensageria para o serviço extrator de dados (notificação)");
+        logger.info("[{}]", relatorioEntrega);
+
+        relatorioEntregaNotificacaoRecebimentoEmitter.send(relatorioEntrega);
 
         return Response.status(200).entity(relatorioEntrega).build();
     }

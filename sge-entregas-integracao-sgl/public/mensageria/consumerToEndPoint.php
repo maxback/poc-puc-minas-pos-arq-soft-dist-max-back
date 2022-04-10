@@ -38,7 +38,10 @@ $consume_timeout      = 120*1000;
 //$metadata_broker_list = $_ENV['kafka.metadata.broker.list']; //'gsl-mensageria-kafka'
 //$bootstrap_servers    = $_ENV['kafka.bootstrap.servers' ]; //'gsl-mensageria-kafka:9092'
 //$auto_offset_reset    = $_ENV['kafka.auto.offset.reset']; //'earliest'
-//$topic                = $_ENV['kafka.auto.offset.reset']; //'relatorio-entrega-recebido'
+if(isset($_ENV['kafka.topic'])) {
+    $topic                = $_ENV['kafka.topic'];
+    echo "Valor do tópico carregado da variável de ambiente: [$topic]";
+}
 //$consume_timeout      = $_ENV['kafka.consume.timeout']; //120*1000
 
 

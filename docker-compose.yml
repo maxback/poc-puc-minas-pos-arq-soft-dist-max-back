@@ -12,7 +12,7 @@ services:
     environment:
       LOG_DIR: /tmp/logs
     networks:
-      - sge-network
+      - ssl-network
 
   gsl-mensageria-kafka:
     image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
@@ -30,7 +30,7 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     networks:
-      - sge-network
+      - ssl-network
 
 
 
@@ -47,10 +47,10 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - sge-network
+      - ssl-network
 
 
-
+  # este sorvió consome se ativado o topico de de relatorio entrega recebido
   #gsl-api-gateway-monitor-quarkus:
   #  image: gsl/gsl-api-gateway-monitor-quarkus:1.0-${QUARKUS_MODE:-jvm}
   #  build:
@@ -63,8 +63,7 @@ services:
   #  ports:
   #    - "8088:8080"      
   #  networks:
-  #    - sge-network
-
+  #    - ssl-network
 
 
 
@@ -92,7 +91,7 @@ services:
     links:
       - sge-entregas-db
     networks:
-      - sge-network
+      - ssl-network
 
 
   sge-entregas-integracao-sgl-php:
@@ -110,8 +109,10 @@ services:
     #]
     environment:
       services.SgeEntregasService.url: http://gse-entregas-service-php:9000/
+      #kafka.topic: relatorio-entrega-parceiros
+      kafka.topic: relatorio-entrega-recebido
     networks:
-      - sge-network
+      - ssl-network
 
 
 
@@ -150,7 +151,7 @@ services:
   #  links:
   #    - sge-entregas-db
   #  networks:
-  #    - sge-network
+  #    - ssl-network
 
 
 
@@ -169,11 +170,85 @@ services:
       #MYSQL_PASSWORD: '12345678'
       MYSQL_ROOT_PASSWORD: '12345'
     networks:
-      - sge-network
+      - ssl-network
 
-volumes:
-  mysql:
+
+  gsl-dados-consolidados-db:
+    image: mysql:5.7
+    container_name: gsl-dados-consolidados-db
+    ports:
+      - "3308:3306"
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./gsl-dados-consolidados-db/init.sql:/data/application/init.sql      
+      - ./gsl-dados-consolidados-db/mysql:/var/lib/mysql/
+    environment:
+      MYSQL_DATABASE: 'gsl_dados_consolidados_db'
+      #MYSQL_USER: 'root'
+      #MYSQL_PASSWORD: '12345678'
+      MYSQL_ROOT_PASSWORD: '12345'
+    networks:
+      - ssl-network
+
+
+  ################# Core do apache flink, solto aqui junto - kafka(gsl-mensageria-kafka) e mysql(consolidados) fora deste core 
+  #gsl-extrator-tabela-deslocamento-veiculo-jobmanager:
+  jobmanager:
+    image: gsl-extrator-tabela-deslocamento-veiculo:1-FLINK-1.13-scala_2.12
+    #build: ./gsl-extrator-tabela-deslocamento-veiculo
+    build:
+      context: gsl-extrator-tabela-deslocamento-veiculo
+    hostname: "jobmanager"
+    expose:
+      - "6123"
+    ports:
+      - "8082:8081"
+    command: standalone-job
+    environment:
+      JOB_MANAGER_RPC_ADDRESS: 'jobmanager'
+    depends_on:
+      - gsl-mensageria-kafka
+      - gsl-dados-consolidados-db
+    networks:
+      - ssl-network
+
+
+  #gsl-extrator-tabela-deslocamento-veiculo-taskmanager:
+  taskmanager:
+    image: gsl-extrator-tabela-deslocamento-veiculo:1-FLINK-1.13-scala_2.12
+    #build: ./gsl-extrator-tabela-deslocamento-veiculo
+    build:
+      context: gsl-extrator-tabela-deslocamento-veiculo
+    expose:
+      - "6121"
+      - "6122"
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    links:
+      - jobmanager:jobmanager
+    environment:
+      JOB_MANAGER_RPC_ADDRESS: 'jobmanager'
+    networks:
+      - ssl-network
+
+  #gsl-extrator-tabela-deslocamento-veiculo-grafana:
+  grafana:
+    image: grafana/grafana:7.5.8
+    ports:
+      - "3000:3000"
+    depends_on:
+      - gsl-dados-consolidados-db
+    volumes:
+      - ./gsl-extrator-tabela-deslocamento-veiculo/grafana/provisioning/:/etc/grafana/provisioning/
+      - ./gsl-extrator-tabela-deslocamento-veiculo/grafana/dashboard.json:/etc/grafana/dashboard.json
+      - ./gsl-extrator-tabela-deslocamento-veiculo/grafana/grafana.ini:/etc/grafana/grafana.ini
+    networks:
+      - ssl-network
+
+  ################################
+
 
 networks:
-  sge-network:
+  ssl-network:
     name: sgenetwork  
