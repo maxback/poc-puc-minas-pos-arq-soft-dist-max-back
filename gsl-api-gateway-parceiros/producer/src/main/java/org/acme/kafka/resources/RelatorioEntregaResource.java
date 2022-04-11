@@ -1,6 +1,9 @@
 package org.acme.kafka.resources;
 
 import java.util.UUID;
+import java.util.Date;
+import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -58,6 +61,14 @@ public class RelatorioEntregaResource {
         }
 
         relatorioEntrega.uuid = uuidRelatorio.toString();
+
+        //if(relatorioEntrega.data == null) {
+            logger.info("O campo data foi ajustado para data e hora atual");
+            //Long datetime = System.currentTimeMillis();
+
+            relatorioEntrega.AtualizarCampoData();
+        //}
+        logger.info("valor da data = [{}]", relatorioEntrega.data);
 
         logger.info("Enviando solicitação via mensageria para o serviço sge-entregas");
         logger.info("[{}]", relatorioEntrega);

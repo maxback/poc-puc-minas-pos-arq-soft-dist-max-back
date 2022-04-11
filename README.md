@@ -74,9 +74,23 @@ use gsl_dados_consolidados_db;
 
 select count(*) from relatorio_desloc_veiculos;
 
+select * from relatorio_desloc_veiculos;
 
 
 docker-compose logs jobmanager | grep ERROR -B 5 -A 5
 
-docker-compose logs -f | grep -E "(relatorio-entrega-|ERROR) -B 3 -A 5
+docker-compose logs -f | grep -E "(relatorio-entrega-|ERROR)" -B 3 -A 15
+
+
+
+## Consultas no grafana
+
+SELECT 
+  now() as time,
+  CAST(id_entrega AS CHAR(50)) as metric,
+  sum(contador) as value
+FROM 
+  relatorio_desloc_veiculos
+GROUP BY
+  id_entrega
 

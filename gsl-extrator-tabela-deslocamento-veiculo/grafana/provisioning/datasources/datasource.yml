@@ -25,11 +25,11 @@ datasources:
      name: MySQL
      type: mysql
      access: proxy
-     url: mysql:3306
-     user: sql-demo
-     database: sql-demo
+     url: gsl-dados-consolidados-db:3306
+     user: root
+     database: gsl_dados_consolidados_db
      isDefault: true
      jsonData:
        timeInterval: 1s
      secureJsonData:
-       password: demo-sql 
+       password: 12345 

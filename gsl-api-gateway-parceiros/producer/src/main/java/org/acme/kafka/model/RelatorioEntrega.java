@@ -3,6 +3,10 @@ package org.acme.kafka.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.time.LocalDateTime;
+import java.sql.Timestamp;
+
+import java.time.format.DateTimeFormatter;
 
 public class RelatorioEntrega {
 
@@ -13,7 +17,16 @@ public class RelatorioEntrega {
     public double latitude;
     public double longitude;
     public String descricao;
-    public String data; //no formato It conforms to ISO 8601 (2012-04-23T18:25:43.511Z)
+    //public LocalDateTime data;
+    //public Timestamp data;
+    public String data;
+
+    public void AtualizarCampoData() {
+        //exemplo: 2022-04-11 04:49:32.127
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.nnn");  
+        LocalDateTime now = LocalDateTime.now();  
+        this.data = dtf.format(now);
+    }
     
     public RelatorioEntrega(String uuid, long id_entrega, StatusEntrega status, String descricao, double latitude, double longitude) {
         this.id = 0; //será definido ao salvar no bnaco de ados
@@ -24,16 +37,12 @@ public class RelatorioEntrega {
         this.longitude = longitude;
         this.descricao = descricao;
 
-        Date date = new Date(System.currentTimeMillis());
+        AtualizarCampoData();
 
-        SimpleDateFormat sdf;
-        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-        //sdf.setTimeZone(TimeZone.getTimeZone("CET"));
-        this.data = sdf.format(date);
-        
     }
 
     public RelatorioEntrega() {
+        AtualizarCampoData();
     }
 
     @Override

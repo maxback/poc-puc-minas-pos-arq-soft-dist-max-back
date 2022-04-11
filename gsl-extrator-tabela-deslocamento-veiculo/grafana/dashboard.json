@@ -66,20 +66,20 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT \n  now() as time,\n  CAST(account_id AS CHAR(50)) as metric,\n  sum(amount) as value\nFROM \n  spend_report\nGROUP BY\n  account_id\n\n",
+          "rawSql": "SELECT \n  now() as time,\n  CAST(id_entrega AS CHAR(50)) as metric,\n  sum(contador) as value\nFROM \n  relatorio_desloc_veiculos\nGROUP BY\n  id_entrega\n\n",
           "refId": "A",
           "select": [
             [
               {
                 "params": [
-                  "account_id"
+                  "id_entrega"
                 ],
                 "type": "column"
               }
             ]
           ],
-          "table": "spend_report",
-          "timeColumn": "account_id",
+          "table": "relatorio_desloc_veiculos",
+          "timeColumn": "id_entrega",
           "timeColumnType": "bigint",
           "where": [
             {
@@ -92,7 +92,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Spend Report",
+      "title": "Envios de Relatório de deslocamento de veículos",
       "type": "gauge"
     }
   ],

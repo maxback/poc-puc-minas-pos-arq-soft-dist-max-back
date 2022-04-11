@@ -58,7 +58,9 @@ public class RelatorioDeslocVeiculos {
 
         tEnv.executeSql("CREATE TABLE relatorio_entrega_recebido (\n" +
                 "    id_entrega  BIGINT,\n" +
-                "    status      BIGINT,\n" +
+                "    status      VARCHAR(256),\n" +
+                //java java.time.LocalDateTime -> TIMESTAMP
+                //ver https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/types/#list-of-data-types
                 "    data TIMESTAMP(3),\n" +
                 "    WATERMARK FOR data AS data - INTERVAL '5' SECOND\n" +
                 ") WITH (\n" +
@@ -70,14 +72,14 @@ public class RelatorioDeslocVeiculos {
 
         tEnv.executeSql("CREATE TABLE relatorio_desloc_veiculos (\n" +
                 "    id_entrega BIGINT,\n" +
-                "    status     BIGINT\n," +
+                "    status     VARCHAR(256)\n," + 
                 "    log_ts     TIMESTAMP(3),\n" +
                 "    contador     BIGINT\n," +
                 "    PRIMARY KEY (id_entrega, status, log_ts) NOT ENFORCED" +
                 ") WITH (\n" +
                 "  'connector'  = 'jdbc',\n" +
                 "  'url'        = 'jdbc:mysql://gsl-dados-consolidados-db:3306/gsl_dados_consolidados_db',\n" +
-                "  'table-name' = 'spend_report',\n" +
+                "  'table-name' = 'relatorio_desloc_veiculos',\n" +
                 "  'driver'     = 'com.mysql.jdbc.Driver',\n" +
                 "  'username'   = 'root',\n" +
                 "  'password'   = '12345'\n" +

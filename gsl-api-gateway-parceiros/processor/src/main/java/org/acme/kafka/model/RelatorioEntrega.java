@@ -13,7 +13,7 @@ public class RelatorioEntrega {
     public double latitude;
     public double longitude;
     public String descricao;
-    public String data; //no formato It conforms to ISO 8601 (2012-04-23T18:25:43.511Z)
+    public Date data;
     
     public RelatorioEntrega(String uuid, long id_entrega, StatusEntrega status, String descricao, double latitude, double longitude) {
         this.id = 0; //será definido ao salvar no bnaco de ados
@@ -24,17 +24,14 @@ public class RelatorioEntrega {
         this.longitude = longitude;
         this.descricao = descricao;
 
-        Date date = new Date(System.currentTimeMillis());
-
-        SimpleDateFormat sdf;
-        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-        //sdf.setTimeZone(TimeZone.getTimeZone("CET"));
-        this.data = sdf.format(date);
-        
+        this.data = new Date(System.currentTimeMillis());
     }
 
     public RelatorioEntrega() {
+
+        this.data = new Date(System.currentTimeMillis());
     }
+
 
     @Override
     public String toString() {
