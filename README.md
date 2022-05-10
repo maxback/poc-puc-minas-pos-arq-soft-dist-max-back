@@ -46,6 +46,25 @@ Extra: Execução manual do consumer php:
 docker exec 94a1a6a272e8 php /var/www/html/public/mensageria/consumer.php
 
 
+5) Fluxos node-red
+Com o ambiente em pé (docker-compose up pode-se agora usar o node-red para desenhar envios de pedidos automatizados):
+
+http://localhost:1881/
+
+Para exportar e importar entre projetos no node-red:
+
+How to Export and Import Flows-Node-Red
+Note: Use CTRL+A to select all nodes in the workspace.
+Then click on Menu>export>clipboard.
+Note: This only works for flows in the same workspace.
+Q- Can I use the export feature to backup my flows.
+A- Yes it is one of the backup methods you can use.
+<=====Deploying Node-Red Flows.
+
+Instalei o node "node-red-dashboard" (Menu > Setings > Palete > Install )
+
+
+
 
 ## Monitorar:
 

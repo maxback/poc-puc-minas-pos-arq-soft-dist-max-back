@@ -248,6 +248,17 @@ services:
 
   ################################
 
+  teste-e-monitoramento-node-red:
+    image: nodered/node-red:latest
+    environment:
+      - TZ=America/Sao_Paulo
+    ports:
+      - "1881:1880"
+    networks:
+      - ssl-network
+    volumes:
+      - ./teste-e-monitoramento-node-red/data:/data  
+
 
 networks:
   ssl-network:
