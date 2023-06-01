@@ -26,30 +26,6 @@ public class RelatorioDeslocVeiculos {
             $("log_ts"),
             $("status").count().as("contador"));
         
-            
-        //funcao personalizada
-        /*
-        return relatorioEntregaRecebido.select(
-            $("id_entrega"),
-            call(MyFloor.class, $("data")).as("log_ts"),
-            $("status"))
-        .groupBy($("id_entrega"), $("log_ts"))
-        .select(
-            $("id_entrega"),
-            $("log_ts"),
-            $("status").sum().as("status"));
-        */
-        
-        //janela de tempo
-        /*
-        return relatorioEntregaRecebido
-        .window(Tumble.over(lit(1).hour()).on($("data")).as("log_ts"))
-        .groupBy($("id_entrega"), $("log_ts"))
-        .select(
-            $("id_entrega"),
-            $("log_ts").start().as("log_ts"),
-            $("status").sum().as("status"));        
-        */
     }
 
     public static void main(String[] args) throws Exception {
@@ -59,8 +35,6 @@ public class RelatorioDeslocVeiculos {
         tEnv.executeSql("CREATE TABLE relatorio_entrega_recebido (\n" +
                 "    id_entrega  BIGINT,\n" +
                 "    status      VARCHAR(256),\n" +
-                //java java.time.LocalDateTime -> TIMESTAMP
-                //ver https://nightlies.apache.org/flink/flink-docs-master/docs/dev/table/types/#list-of-data-types
                 "    data TIMESTAMP(3),\n" +
                 "    WATERMARK FOR data AS data - INTERVAL '5' SECOND\n" +
                 ") WITH (\n" +

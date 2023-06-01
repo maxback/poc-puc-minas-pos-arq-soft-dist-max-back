@@ -1,0 +1,361 @@
+[
+    {
+        "id": "738ca5f47c964863",
+        "type": "tab",
+        "label": "Envio regilar solicitações API Parceiros",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0332563ba51390b5",
+        "type": "inject",
+        "z": "738ca5f47c964863",
+        "name": "health",
+        "props": [],
+        "repeat": "120",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 120,
+        "y": 60,
+        "wires": [
+            [
+                "28fb49f444af4229"
+            ]
+        ]
+    },
+    {
+        "id": "28fb49f444af4229",
+        "type": "http request",
+        "z": "738ca5f47c964863",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://gsl-api-gateway-parceiros-quarkus:8080/q/health/live/",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 60,
+        "wires": [
+            [
+                "91e5754b5a2c221d"
+            ]
+        ]
+    },
+    {
+        "id": "91e5754b5a2c221d",
+        "type": "debug",
+        "z": "738ca5f47c964863",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "2cacac27da2b465c",
+        "type": "inject",
+        "z": "738ca5f47c964863",
+        "name": "envia",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 140,
+        "wires": [
+            [
+                "40ef60f03d9ab8ce"
+            ]
+        ]
+    },
+    {
+        "id": "b81a69315491ccfe",
+        "type": "http request",
+        "z": "738ca5f47c964863",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "http://gsl-api-gateway-parceiros-quarkus:8080/entrega/0/relatorio",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            }
+        ],
+        "x": 510,
+        "y": 140,
+        "wires": [
+            [
+                "d9f48a41ddabc409"
+            ]
+        ]
+    },
+    {
+        "id": "d9f48a41ddabc409",
+        "type": "debug",
+        "z": "738ca5f47c964863",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "40ef60f03d9ab8ce",
+        "type": "function",
+        "z": "738ca5f47c964863",
+        "name": "0 - PENDENTE",
+        "func": "var dados = msg.payload = {\n    \"data\": \"\",\n    \"descricao\": \"entrega 0\",\n    \"uuid\": \"\",\n    \"id_entrega\": 0,\n    \"latitude\": 123,\n    \"longitude\": 456,\n    \"status\": 0\n};\n\n//node.log(typeof dados);\n\n\nmsg.payload = dados; //JSON.stringify(dados);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 140,
+        "wires": [
+            [
+                "b81a69315491ccfe",
+                "5d144325ecca2a28"
+            ]
+        ]
+    },
+    {
+        "id": "5d144325ecca2a28",
+        "type": "debug",
+        "z": "738ca5f47c964863",
+        "name": "debug playload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 460,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "66faecc1ad93fd70",
+        "type": "inject",
+        "z": "738ca5f47c964863",
+        "name": "envia",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 360,
+        "wires": [
+            [
+                "9fc717f7fd09ac43"
+            ]
+        ]
+    },
+    {
+        "id": "a47eb822879c8865",
+        "type": "http request",
+        "z": "738ca5f47c964863",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "body",
+        "url": "http://gsl-api-gateway-parceiros-quarkus:8080/entrega/1/relatorio",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 360,
+        "wires": [
+            [
+                "35a25fdbdba2d9f9"
+            ]
+        ]
+    },
+    {
+        "id": "35a25fdbdba2d9f9",
+        "type": "debug",
+        "z": "738ca5f47c964863",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "9fc717f7fd09ac43",
+        "type": "function",
+        "z": "738ca5f47c964863",
+        "name": "1 - EM_TRANSIDO",
+        "func": "var dados = msg.payload = {\n    \"data\": \"\",\n    \"descricao\": \"entrega 0\",\n    \"uuid\": \"\",\n    \"id_entrega\": 1,\n    \"latitude\": 123,\n    \"longitude\": 456,\n    \"status\": \"EM_TRANSIDO\"\n};\n\n//node.log(typeof dados);\n\n\nmsg.payload = dados; //JSON.stringify(dados);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 320,
+        "wires": [
+            [
+                "a47eb822879c8865",
+                "1830b601ea3143a4"
+            ]
+        ]
+    },
+    {
+        "id": "1830b601ea3143a4",
+        "type": "debug",
+        "z": "738ca5f47c964863",
+        "name": "debug playload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 340,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "818f2ce0de7bd705",
+        "type": "inject",
+        "z": "738ca5f47c964863",
+        "name": "pede",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 100,
+        "wires": [
+            [
+                "32cbdede1064499b"
+            ]
+        ]
+    },
+    {
+        "id": "32cbdede1064499b",
+        "type": "http request",
+        "z": "738ca5f47c964863",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://gsl-api-gateway-parceiros-quarkus:8080/entrega/0/relatorio/0",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 510,
+        "y": 100,
+        "wires": [
+            [
+                "4ff062b5262b8045"
+            ]
+        ]
+    },
+    {
+        "id": "4ff062b5262b8045",
+        "type": "debug",
+        "z": "738ca5f47c964863",
+        "name": "debug get rel.",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 100,
+        "wires": []
+    }
+]

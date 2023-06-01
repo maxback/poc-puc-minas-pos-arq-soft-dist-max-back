@@ -1,12 +1,9 @@
-version: "3.7" 
+version: "3.7"
 services:
-
   zookeeper:
     image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
-    command: [
-      "sh", "-c",
-      "bin/zookeeper-server-start.sh config/zookeeper.properties"
-    ]
+    command:
+      ["sh", "-c", "bin/zookeeper-server-start.sh config/zookeeper.properties"]
     ports:
       - "2181:2181"
     environment:
@@ -16,10 +13,12 @@ services:
 
   gsl-mensageria-kafka:
     image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
-    command: [
-      "sh", "-c",
-      "bin/kafka-server-start.sh config/server.properties --override listeners=$${KAFKA_LISTENERS} --override advertised.listeners=$${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=$${KAFKA_ZOOKEEPER_CONNECT}"
-    ]
+    command:
+      [
+        "sh",
+        "-c",
+        "bin/kafka-server-start.sh config/server.properties --override listeners=$${KAFKA_LISTENERS} --override advertised.listeners=$${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=$${KAFKA_ZOOKEEPER_CONNECT}",
+      ]
     depends_on:
       - zookeeper
     ports:
@@ -31,8 +30,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     networks:
       - ssl-network
-
-
 
   gsl-api-gateway-parceiros-quarkus:
     image: gsl/gsl-api-gateway-parceiros-quarkus:1.0-${QUARKUS_MODE:-jvm}
@@ -49,24 +46,6 @@ services:
     networks:
       - ssl-network
 
-
-  # este sorvió consome se ativado o topico de de relatorio entrega recebido
-  #gsl-api-gateway-monitor-quarkus:
-  #  image: gsl/gsl-api-gateway-monitor-quarkus:1.0-${QUARKUS_MODE:-jvm}
-  #  build:
-  #    context: gsl-api-gateway-parceiros/processor
-  #    dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
-  #  depends_on:
-  #    - gsl-mensageria-kafka
-  #  environment:
-  #    KAFKA_BOOTSTRAP_SERVERS: gsl-mensageria-kafka:9092
-  #  ports:
-  #    - "8088:8080"      
-  #  networks:
-  #    - ssl-network
-
-
-
   gse-entregas-service-php:
     build:
       context: sge-entregas
@@ -76,11 +55,8 @@ services:
       - "9000:9000"
     volumes:
       - "./sge-entregas/:/var/www/html/"
-    #php /var/www/html/public/mensageria/consumer.php  
-    command: [
-      "sh", "-c",
-      "php -S 0.0.0.0:9000 -t public/api/"
-    ]
+    #php /var/www/html/public/mensageria/consumer.php
+    command: ["sh", "-c", "php -S 0.0.0.0:9000 -t public/api/"]
     environment:
       DB_HOST: sge-entregas-db
       DB_PORT: 3306
@@ -93,7 +69,6 @@ services:
     networks:
       - ssl-network
 
-
   sge-entregas-integracao-sgl-php:
     build:
       context: sge-entregas-integracao-sgl
@@ -102,58 +77,13 @@ services:
       - "9001:9000"
     volumes:
       - "./sge-entregas-integracao-sgl/:/var/www/html/"
-    
-    #command: [
-    #  "sh", "-c",
-    #  "php /var/www/html/public/mensageria/consumerToEndPoint.php"
-    #]
+
     environment:
       services.SgeEntregasService.url: http://gse-entregas-service-php:9000/
       #kafka.topic: relatorio-entrega-parceiros
       kafka.topic: relatorio-entrega-recebido
     networks:
       - ssl-network
-
-
-
-  #gse-entregas-integracao-php:
-  #  build:
-  #    context: sge-entregas
-  #  #image: sge-entregas/ge-entregas-service-php
-  #  image: sge-entregas/ge-entregas-integracao-php
-  #  #container_name: sge-entregas-integeracao
-  #  ports:
-  #    - "9001:9000"
-  #  volumes:
-  #    - "./sge-entregas/:/var/www/html/"
-  #  
-  #  command: [
-  #    "sh", "-c",
-  #    #"php /var/www/html/public/mensageria/consumer3.php"
-  #    "php /var/www/html/public/mensageria/consumerToEndPoint.php"
-  #  ]
-  #  environment:
-  #    DB_HOST: sge-entregas-db
-  #    DB_PORT: 3306
-  #    DB_DATABASE: sge_entregas_db
-  #    DB_USERNAME: root
-  #    DB_PASSWORD: 12345
-#
-  #    kafka.group.id: kafka-quickstart-producer'
-  #    kafka.metadata.broker.list: 'gsl-mensageria-kafka'
-  #    kafka.bootstrap.servers: 'gsl-mensageria-kafka:9092'
-  #    kafka.auto.offset.reset: 'earliest'
-  #    kafka.topic: 'relatorio-entrega-recebido'
-  #    kafka.consume.timeout: 180000      
-#
-  #    services.SgeEntregasService.url: http://gse-entregas-service-php:9000/
-#
-  #  links:
-  #    - sge-entregas-db
-  #  networks:
-  #    - ssl-network
-
-
 
   sge-entregas-db:
     image: mysql:5.7
@@ -162,16 +92,15 @@ services:
       - "3307:3306"
     command: --init-file /data/application/init.sql
     volumes:
-      - ./sge-entregas/criacao-banco-mysql/init.sql:/data/application/init.sql      
+      - ./sge-entregas/criacao-banco-mysql/init.sql:/data/application/init.sql
       - ./sge-entregas/mysql:/var/lib/mysql/
     environment:
-      MYSQL_DATABASE: 'sge_entregas_db'
+      MYSQL_DATABASE: "sge_entregas_db"
       #MYSQL_USER: 'root'
       #MYSQL_PASSWORD: '12345678'
-      MYSQL_ROOT_PASSWORD: '12345'
+      MYSQL_ROOT_PASSWORD: "12345"
     networks:
       - ssl-network
-
 
   gsl-dados-consolidados-db:
     image: mysql:5.7
@@ -180,73 +109,15 @@ services:
       - "3308:3306"
     command: --init-file /data/application/init.sql
     volumes:
-      - ./gsl-dados-consolidados-db/init.sql:/data/application/init.sql      
+      - ./gsl-dados-consolidados-db/init.sql:/data/application/init.sql
       - ./gsl-dados-consolidados-db/mysql:/var/lib/mysql/
     environment:
-      MYSQL_DATABASE: 'gsl_dados_consolidados_db'
+      MYSQL_DATABASE: "gsl_dados_consolidados_db"
       #MYSQL_USER: 'root'
       #MYSQL_PASSWORD: '12345678'
-      MYSQL_ROOT_PASSWORD: '12345'
+      MYSQL_ROOT_PASSWORD: "12345"
     networks:
       - ssl-network
-
-
-  ################# Core do apache flink, solto aqui junto - kafka(gsl-mensageria-kafka) e mysql(consolidados) fora deste core 
-  #gsl-extrator-tabela-deslocamento-veiculo-jobmanager:
-  jobmanager:
-    image: gsl-extrator-tabela-deslocamento-veiculo:1-FLINK-1.13-scala_2.12
-    #build: ./gsl-extrator-tabela-deslocamento-veiculo
-    build:
-      context: gsl-extrator-tabela-deslocamento-veiculo
-    hostname: "jobmanager"
-    expose:
-      - "6123"
-    ports:
-      - "8082:8081"
-    command: standalone-job
-    environment:
-      JOB_MANAGER_RPC_ADDRESS: 'jobmanager'
-    depends_on:
-      - gsl-mensageria-kafka
-      - gsl-dados-consolidados-db
-    networks:
-      - ssl-network
-
-
-  #gsl-extrator-tabela-deslocamento-veiculo-taskmanager:
-  taskmanager:
-    image: gsl-extrator-tabela-deslocamento-veiculo:1-FLINK-1.13-scala_2.12
-    #build: ./gsl-extrator-tabela-deslocamento-veiculo
-    build:
-      context: gsl-extrator-tabela-deslocamento-veiculo
-    expose:
-      - "6121"
-      - "6122"
-    depends_on:
-      - jobmanager
-    command: taskmanager
-    links:
-      - jobmanager:jobmanager
-    environment:
-      JOB_MANAGER_RPC_ADDRESS: 'jobmanager'
-    networks:
-      - ssl-network
-
-  #gsl-extrator-tabela-deslocamento-veiculo-grafana:
-  grafana:
-    image: grafana/grafana:7.5.8
-    ports:
-      - "3000:3000"
-    depends_on:
-      - gsl-dados-consolidados-db
-    volumes:
-      - ./gsl-extrator-tabela-deslocamento-veiculo/grafana/provisioning/:/etc/grafana/provisioning/
-      - ./gsl-extrator-tabela-deslocamento-veiculo/grafana/dashboard.json:/etc/grafana/dashboard.json
-      - ./gsl-extrator-tabela-deslocamento-veiculo/grafana/grafana.ini:/etc/grafana/grafana.ini
-    networks:
-      - ssl-network
-
-  ################################
 
   teste-e-monitoramento-node-red:
     image: nodered/node-red:latest
@@ -257,9 +128,8 @@ services:
     networks:
       - ssl-network
     volumes:
-      - ./teste-e-monitoramento-node-red/data:/data  
-
+      - ./teste-e-monitoramento-node-red/data:/data
 
 networks:
   ssl-network:
-    name: sgenetwork  
+    name: sgenetwork
